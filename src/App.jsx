@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Routes from "./App/Routes/Routes";
-import { FaTimes } from "react-icons/fa"; // Import Font Awesome close icon
-import { motion } from "framer-motion"; // Import framer-motion for animations
+// import { FaTimes } from "react-icons/fa"; // Import Font Awesome close icon
+// import { motion } from "framer-motion"; // Import framer-motion for animations
 
 const App = () => {
   const [isOffline, setIsOffline] = useState(() => !navigator.onLine);
