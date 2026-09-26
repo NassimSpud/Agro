@@ -5,8 +5,7 @@ import { FaMapMarkerAlt, FaUserAlt, FaTruck, FaPhoneAlt } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const MAPBOX_ACCESS_TOKEN =
-  "pk.eyJ1IjoiYmF6dWJhbGV0YSIsImEiOiJjbHY1cHhqM2cwNGYwMmpvMGQxZmlrYWwyIn0.-E-J7cEzxPSMwnGIBpho0A";
+const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 const DELIVERY_PERSON_NAME = "John Doe";
 const DELIVERY_PHONE_NUMBER = "+254 700 123456";
 const SPEED_KMH = 50;
@@ -32,6 +31,15 @@ const Tracking = () => {
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
+
+    if (!MAPBOX_ACCESS_TOKEN) {
+      console.error(
+        "Missing Mapbox access token. Set VITE_MAPBOX_ACCESS_TOKEN in your .env file."
+      );
+      setError("Mapbox access token is not configured.");
+      setLoading(false);
+      return;
+    }
 
     mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
 
