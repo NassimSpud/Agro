@@ -1,5 +1,3 @@
-import React from "react";
-
 const NearbyShop = () => {
   const shops = [
     { id: 1, name: "Green World Farm", distance: "2.5 km", address: "Westlands, Nairobi" },

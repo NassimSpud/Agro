@@ -1,16 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 
 // Landing & Public Pages
-
 import LandingPage from "../LandingPage/Landing";
 import Login from "../Authentication/Login/Login";
 
 // Dashboard Layouts
 import BuyerDashBoard from "../Modules/Users/BuyersDashBoard.jsx";
-import DeliveryDashBoard from "../Modules/Users/DeliverersDashBoard.jsx";
-import MarketSellersDashBoard from "../Modules/Users/MarketSellersDashBoard.jsx";
-import FarmerDashBoard from "../Modules/Users/FarmersDashBoard.jsx";
-import AdminDashboard from "../Modules/Users/AdminDashboard.jsx";
 
 // Buyer Components
 import BuyerHome from "../Modules/Buyers/BuyerHome";
@@ -18,17 +13,18 @@ import MarketPlace from "../Modules/Buyers/MarketPlace";
 import Orders from "../Modules/Buyers/Orders";
 import Tracking from "../Modules/Buyers/Tracking";
 import Favorites from "../Modules/Buyers/Favorites";
+import Categories from "../Modules/Buyers/Categories/Categories";
 import Fruits from "../Modules/Buyers/Fruits";
 import Vegetables from "../Modules/Buyers/Categories/Vegetables.jsx";
 import DairyProducts from "../Modules/Buyers/Categories/DairyProducts";
 import Guides from "../Modules/Buyers/Guides";
 import BuyerMessages from "../Modules/Buyers/BuyerMessage";
-import BuyerCommunity from "../Modules/Buyers/BuyerCommunity";
-import OrderHistory from "../Modules/Buyers/OrderHistory";
-import Cart from "../Modules/Buyers/Header/Cart/Cart";
 import NearbyShop from "../Modules/Buyers/NearbyShop";
+import Settings from "../Modules/Buyers/Settings";
+import Cart from "../Modules/Buyers/Header/Cart/Cart.jsx";
 
 // Delivery Components
+// import DeliveryDashBoard from "../Modules/Users/DeliverersDashBoard.jsx";
 // import DeliveryHome from "../Modules/Users/Deliverers/Home/DeliveryHome";
 // import ActiveDeliveries from "../Modules/Users/Deliverers/ActiveDeliveries/ActiveDeliveries";
 // import WholesaleDeliveries from "../Modules/Users/Deliverers/ActiveDeliveries/WholesaleDeliveries";
@@ -43,6 +39,7 @@ import NearbyShop from "../Modules/Buyers/NearbyShop";
 // import DeliveryCommunity from "../Modules/Users/Deliverers/Community/DeliveryCommunity";
 
 // Farmer Components
+// import FarmerDashBoard from "../Modules/Users/FarmersDashBoard.jsx";
 // import FarmerHome from "../Modules/Users/Farmers/Home/FarmerHome";
 // import FarmerProducts from "../Modules/Users/Farmers/Products/FarmerProducts";
 // import FarmerOrders from "../Modules/Users/Farmers/Orders/FarmerOrders";
@@ -58,6 +55,7 @@ import NearbyShop from "../Modules/Buyers/NearbyShop";
 // import FarmerCommunity from "../Modules/Users/Farmers/Community/FarmerCommunity";
 
 // Market Seller Components
+// import MarketSellersDashBoard from "../Modules/Users/MarketSellersDashBoard.jsx";
 // import MarketSellersHome from "../Modules/Users/MarketSellers/Home/MarketSellersHome";
 // import MarketSellersOrders from "../Modules/Users/MarketSellers/Orders/MarketSellersOrders";
 // import MarketSellersInventory from "../Modules/Users/MarketSellers/Inventory/MarketSellersInventory";
@@ -73,6 +71,7 @@ import NearbyShop from "../Modules/Buyers/NearbyShop";
 // import MarketSellersCommunity from "../Modules/Users/MarketSellers/Community/MarketSellersCommunity";
 
 // Admin Components
+// import AdminDashboard from "../Modules/Users/AdminDashboard.jsx";
 // import AdminHome from "../Modules/Administrator/Home/Home";
 // import ViewUsers from "../Modules/Administrator/UserManagement/ViewUsers";
 // import AddUser from "../Modules/Administrator/UserManagement/AddUser";
@@ -99,24 +98,32 @@ import NearbyShop from "../Modules/Buyers/NearbyShop";
 function AppRoutes() {
   return (
     <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/auth" element={<Login />} />
+      {/* ==================== PUBLIC ==================== */}
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/auth" element={<Login />} />
+
       {/* ==================== BUYERS ==================== */}
       <Route path="/buyerdashboard" element={<BuyerDashBoard />}>
         <Route index element={<BuyerHome />} />
+
+        {/* Main group */}
         <Route path="marketplace" element={<MarketPlace />} />
         <Route path="orders" element={<Orders />} />
         <Route path="tracking" element={<Tracking />} />
         <Route path="favorites" element={<Favorites />} />
+        <Route path="messages" element={<BuyerMessages />} />
+
+        {/* Discover group */}
+        <Route path="categories" element={<Categories />} />
         <Route path="categories/fruits" element={<Fruits />} />
         <Route path="categories/vegetables" element={<Vegetables />} />
         <Route path="categories/dairy" element={<DairyProducts />} />
-        <Route path="guides" element={<Guides />} />
-        <Route path="messages" element={<BuyerMessages />} />
-        <Route path="community" element={<BuyerCommunity />} />
-        <Route path="orderhistory" element={<OrderHistory />} />
-        <Route path="cart" element={<Cart />} />
         <Route path="nearbyshop" element={<NearbyShop />} />
+        <Route path="guides" element={<Guides />} />
+
+        {/* Cart & settings */}
+        <Route path="cart" element={<Cart />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
 
       {/* ==================== DELIVERY ==================== */}
@@ -193,9 +200,10 @@ function AppRoutes() {
         <Route path="settings/security" element={<SecuritySettings />} />
         <Route path="settings/apikeys" element={<APIKeys />} />
         <Route path="tools" element={<Tools />} />
-      </Route>
+      </Route> */}
 
-        {/* ==================== PAGE NOT FOUND ==================== */}
+      {/* ==================== PAGE NOT FOUND ==================== */}
+      {/* Add a <Route path="*" element={<NotFound />} /> here later */}
     </Routes>
   );
 }

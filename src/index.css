@@ -1,1 +1,53 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg: #F2F1EA;
+  --surface: #FFFFFF;
+  --surface-2: #F7F8F3;
+  --surface-3: #EBEDE5;
+  --text: #1A2B1F;
+  --text-muted: #55655A;
+  --text-dim: #8A968B;
+  --border: rgba(26, 43, 31, 0.08);
+  --border-strong: rgba(26, 43, 31, 0.14);
+  --brand: #1B3D28;
+  --brand-fg: #FFFFFF;
+  --accent: #6B9B7A;
+  --accent-soft: #E6EEE7;
+  --accent-fg: #355B42;
+  --highlight: #C89A54;
+  --highlight-soft: #F5EBD8;
+  --highlight-fg: #6E4F1F;
+  --danger: #B14A4A;
+  --danger-soft: #F6E5E5;
+}
+
+.dark {
+  --bg: #0A140E;
+  --surface: #111E16;
+  --surface-2: #16241B;
+  --surface-3: #1C2E22;
+  --text: #E6EDE5;
+  --text-muted: #97A89C;
+  --text-dim: #5C6B60;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --brand: #7FB88A;
+  --brand-fg: #0A140E;
+  --accent: #8FC49A;
+  --accent-soft: rgba(127, 184, 138, 0.14);
+  --accent-fg: #A8D6B0;
+  --highlight: #D9A75B;
+  --highlight-soft: rgba(217, 167, 91, 0.14);
+  --highlight-fg: #E0B36A;
+  --danger: #E08585;
+  --danger-soft: rgba(224, 133, 133, 0.14);
+}
+
+html, body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

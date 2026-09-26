@@ -1,5 +1,3 @@
-import React from "react";
-
 const Vegetables = () => {
   const vegetables = [
     { id: 1, name: "Sukuma Wiki", price: "KSh 40 / bunch", image: "🥬" },

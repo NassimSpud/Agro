@@ -1,5 +1,3 @@
-import React from "react";
-
 const Guides = () => {
   const guides = [
     { id: 1, title: "How to Grow Healthy Tomatoes", excerpt: "Learn the best practices for tomato farming...", icon: "🍅" },

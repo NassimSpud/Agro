@@ -1,5 +1,3 @@
-import React from "react";
-
 const DairyProducts = () => {
   const dairy = [
     { id: 1, name: "Milk (1L)", price: "KSh 80", image: "🥛" },

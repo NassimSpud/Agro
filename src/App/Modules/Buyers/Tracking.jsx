@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css"; // Ensure Mapbox CSS is imported
 import { FaMapMarkerAlt, FaUserAlt, FaTruck, FaPhoneAlt } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -24,20 +25,24 @@ const Tracking = () => {
     duration: 0,
     cost: 0,
   });
-  const [routeCoordinates, setRouteCoordinates] = useState([]);
   const [remainingDistance, setRemainingDistance] = useState(0);
   const [estimatedArrivalTime, setEstimatedArrivalTime] = useState("");
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null);
 
   useEffect(() => {
+    if (!mapContainerRef.current) return;
+
     mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
 
     const initializeMap = (longitude, latitude) => {
       const map = new mapboxgl.Map({
-        container: "map",
+        container: mapContainerRef.current,
         style: "mapbox://styles/mapbox/streets-v11",
         center: [longitude, latitude],
         zoom: 12,
       });
+      mapRef.current = map;
       return map;
     };
 
@@ -48,7 +53,7 @@ const Tracking = () => {
         );
         const data = await response.json();
 
-        if (data.features.length > 0) {
+        if (data.features && data.features.length > 0) {
           const place = data.features.find((feature) =>
             feature.place_type.includes("place")
           );
@@ -60,70 +65,18 @@ const Tracking = () => {
             town: place ? place.text : "Unknown",
             county: region ? region.text : "Unknown",
           }));
+        } else {
+          setLocation((prevLocation) => ({
+            ...prevLocation,
+            town: "Unknown",
+            county: "Unknown",
+          }));
         }
-      } catch (err) {
+      } catch (error) {
+        console.error("Failed to fetch location details.", error);
         setError("Failed to fetch location details.");
       }
     };
-
-    const fetchRoute = async (map, start, end) => {
-      try {
-        const response = await fetch(
-          `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${MAPBOX_ACCESS_TOKEN}`
-        );
-        const data = await response.json();
-        const route = data.routes[0].geometry.coordinates;
-        const { distance, duration } = data.routes[0];
-
-        const cost = Math.round((distance / 1000) * 50);
-        const hours = Math.floor(duration / 3600);
-        const minutes = Math.floor((duration % 3600) / 60);
-
-        setRouteInfo({
-          distance: (distance / 1000).toFixed(2),
-          duration: `${hours} hr ${minutes} min`,
-          cost: cost,
-        });
-
-        setRouteCoordinates(route);
-
-        map.on("load", () => {
-          map.addLayer({
-            id: "route",
-            type: "line",
-            source: {
-              type: "geojson",
-              data: {
-                type: "Feature",
-                properties: {},
-                geometry: {
-                  type: "LineString",
-                  coordinates: route,
-                },
-              },
-            },
-            layout: {
-              "line-join": "round",
-              "line-cap": "round",
-            },
-            paint: {
-              "line-color": "#1db7dd",
-              "line-width": 5,
-            },
-          });
-
-          simulateMovement(map, route);
-        });
-
-        setLoading(false);
-      } catch (err) {
-        setError("Failed to fetch route data.");
-        setLoading(false);
-      }
-    };
-
-    let hasStarted = false;
-    let hasEnded = false;
 
     const simulateMovement = (map, route) => {
       const marker = new mapboxgl.Marker({ color: "green" })
@@ -132,11 +85,13 @@ const Tracking = () => {
 
       let index = 0;
       const speed = 0.01;
+      let hasStarted = false;
+      let hasEnded = false;
 
       const calculateDistance = (start, end) => {
         const [lng1, lat1] = start;
         const [lng2, lat2] = end;
-        const R = 6371; // Radius of the Earth in km
+        const R = 6371;
         const dLat = ((lat2 - lat1) * Math.PI) / 180;
         const dLng = ((lng2 - lng1) * Math.PI) / 180;
         const a =
@@ -204,41 +159,122 @@ const Tracking = () => {
       move();
     };
 
+    const addRouteLayer = (map, route) => {
+      map.addLayer({
+        id: "route",
+        type: "line",
+        source: {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates: route,
+            },
+          },
+        },
+        layout: {
+          "line-join": "round",
+          "line-cap": "round",
+        },
+        paint: {
+          "line-color": "#1db7dd",
+          "line-width": 5,
+        },
+      });
+
+      simulateMovement(map, route);
+    };
+
+    const fetchRoute = async (map, start, end) => {
+      try {
+        const response = await fetch(
+          `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${MAPBOX_ACCESS_TOKEN}`
+        );
+        const data = await response.json();
+
+        if (!data.routes || data.routes.length === 0) {
+          throw new Error("No route found");
+        }
+
+        const route = data.routes[0].geometry.coordinates;
+        const { distance, duration } = data.routes[0];
+
+        const cost = Math.round((distance / 1000) * 50);
+        const hours = Math.floor(duration / 3600);
+        const minutes = Math.floor((duration % 3600) / 60);
+
+        setRouteInfo({
+          distance: (distance / 1000).toFixed(2),
+          duration: `${hours} hr ${minutes} min`,
+          cost: cost,
+        });
+
+        // Handle map load event safely
+        if (map.loaded()) {
+          addRouteLayer(map, route);
+        } else {
+          map.on("load", () => addRouteLayer(map, route));
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch route data.", error);
+        setError("Failed to fetch route data.");
+        setLoading(false);
+      }
+    };
+
     const getLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            const { latitude, longitude } = position.coords;
-            setLocation((prevLocation) => ({
-              ...prevLocation,
-              latitude,
-              longitude,
-            }));
+      if (!navigator.geolocation) {
+        setError("Geolocation is not supported by this browser.");
+        setLoading(false);
+        return;
+      }
 
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation((prevLocation) => ({
+            ...prevLocation,
+            latitude,
+            longitude,
+          }));
+
+          try {
             await fetchLocationDetails(longitude, latitude);
-
             const map = initializeMap(longitude, latitude);
 
-            const start = [35.2698, 0.5143];
+            const start = [35.2698, 0.5143]; // Example origin (market)
             const end = [longitude, latitude];
 
             new mapboxgl.Marker({ color: "blue" }).setLngLat(start).addTo(map);
             new mapboxgl.Marker({ color: "red" }).setLngLat(end).addTo(map);
 
             await fetchRoute(map, start, end);
-          },
-          (error) => {
-            setError("Unable to retrieve your location.");
+          } catch (error) {
+            console.error("Unable to initialize map or fetch data.", error);
+            setError("Unable to initialize map or fetch data.");
             setLoading(false);
           }
-        );
-      } else {
-        setError("Geolocation is not supported by this browser.");
-        setLoading(false);
-      }
+        },
+        () => {
+          setError("Unable to retrieve your location.");
+          setLoading(false);
+        }
+      );
     };
 
     getLocation();
+
+    // Cleanup function to remove map on unmount
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
   }, []);
 
   return (
@@ -255,6 +291,7 @@ const Tracking = () => {
       {error && <p className="text-red-500">{error}</p>}
 
       <div
+        ref={mapContainerRef}
         id="map"
         className="w-full h-96 mb-5 rounded-lg bg-gray-200 dark:bg-gray-800 animate-fadeIn"
         style={{ minHeight: "400px" }}

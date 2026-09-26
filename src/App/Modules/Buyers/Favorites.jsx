@@ -1,5 +1,3 @@
-import React from "react";
-
 const Favorites = () => {
   const favorites = [
     { id: 1, name: "Avocados", price: "KSh 150 / kg", image: "🥑" },
