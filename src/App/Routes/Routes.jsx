@@ -36,19 +36,18 @@ import Settings from "../Modules/Buyers/Settings";
 import Cart from "../Modules/Buyers/Header/Cart/Cart.jsx";
 
 // Delivery Components
-// import DeliveryDashBoard from "../Modules/Users/DeliverersDashBoard.jsx";
-// import DeliveryHome from "../Modules/Users/Deliverers/Home/DeliveryHome";
-// import ActiveDeliveries from "../Modules/Users/Deliverers/ActiveDeliveries/ActiveDeliveries";
-// import WholesaleDeliveries from "../Modules/Users/Deliverers/ActiveDeliveries/WholesaleDeliveries";
-// import ConsumerDeliveries from "../Modules/Users/Deliverers/ActiveDeliveries/ConsumerDeliveries";
-// import DeliveryHistory from "../Modules/Users/Deliverers/DeliveryHistory/DeliveryHistory";
-// import RoutesPage from "../Modules/Users/Deliverers/DeliveryRoutes/RoutesPage";
-// import DeliveryTracking from "../Modules/Users/Deliverers/Tracking/DeliveryTracking";
-// import DeliveryMessages from "../Modules/Users/Deliverers/Messages/DeliveryMessages";
-// import DeliveryGuides from "../Modules/Users/Deliverers/Guides/DeliveryGuides";
-// import DeliveryFaq from "../Modules/Users/Deliverers/FAQ/DeliveryFaq";
-// import ToolsResources from "../Modules/Users/Deliverers/ToolsResources/ToolsResources";
-// import DeliveryCommunity from "../Modules/Users/Deliverers/Community/DeliveryCommunity";
+import DeliveryDashBoard from "../Modules/Users/DeliverersDashBoard.jsx";
+import DeliveryHome from "../Modules/Deliverers/DeliveryHome";
+import ActiveDeliveries from "../Modules/Deliverers/ActiveDeliveries";
+import DeliveryHistory from "../Modules/Deliverers/DeliveryHistory";
+import RoutesPage from "../Modules/Deliverers/DeliveryRoutes";
+import DeliveryTracking from "../Modules/Deliverers/Tracking";
+import DeliveryMessages from "../Modules/Deliverers/Messages";
+import DeliveryGuides from "../Modules/Deliverers/Guides";
+import DeliveryFaq from "../Modules/Deliverers/FAQ";
+import ToolsResources from "../Modules/Deliverers/ToolsResources";
+import DeliveryCommunity from "../Modules/Deliverers/Community";
+import DeliverySettings from "../Modules/Deliverers/Settings.jsx";
 
 // Farmer Components
 // import FarmerDashBoard from "../Modules/Users/FarmersDashBoard.jsx";
@@ -153,11 +152,9 @@ function AppRoutes() {
       </Route>
 
       {/* ==================== DELIVERY ==================== */}
-      {/* <Route path="/deliverydashboard" element={<DeliveryDashBoard />}>
+      <Route path="/deliverydashboard" element={<DeliveryDashBoard />}>
         <Route index element={<DeliveryHome />} />
         <Route path="activedeliveries" element={<ActiveDeliveries />} />
-        <Route path="activedeliveries/wholesale" element={<WholesaleDeliveries />} />
-        <Route path="activedeliveries/consumer" element={<ConsumerDeliveries />} />
         <Route path="deliveryhistory" element={<DeliveryHistory />} />
         <Route path="routes" element={<RoutesPage />} />
         <Route path="tracking" element={<DeliveryTracking />} />
@@ -166,7 +163,8 @@ function AppRoutes() {
         <Route path="faq" element={<DeliveryFaq />} />
         <Route path="tools" element={<ToolsResources />} />
         <Route path="community" element={<DeliveryCommunity />} />
-      </Route> */}
+        <Route path="settings" element={<DeliverySettings />} /> 
+      </Route>
 
       {/* ==================== FARMER ==================== */}
       {/* <Route path="/farmerdashboard" element={<FarmerDashBoard />}>

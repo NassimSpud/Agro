@@ -9,13 +9,6 @@ const BrandIcon = ({ className = "w-5 h-5" }) => (
   </svg>
 );
 
-const LeafIcon = ({ className = "w-5 h-5" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M11 20A7 7 0 0 1 4 13c0-6 5-10 16-10 0 11-4 16-9 17Z" />
-    <path d="M4 20c3-3 6-5 10-7" />
-  </svg>
-);
-
 const GoogleIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24">
     <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.1.8 3.9 1.5l2.6-2.5C16.9 3.3 14.7 2.3 12 2.3 6.9 2.3 2.7 6.5 2.7 11.6S6.9 20.9 12 20.9c6.9 0 8.9-4.9 8.9-7.4 0-.5 0-.9-.1-1.3H12z" />
@@ -84,6 +77,33 @@ const CheckIcon = ({ className = "w-4 h-4" }) => (
   </svg>
 );
 
+// ======================== Role → Route map ========================
+// Single source of truth for where each role lands after auth.
+const resolveRole = (role) => {
+  const r = String(role || "").trim().toLowerCase();
+  switch (r) {
+    case "farmer":
+    case "seller":
+    case "farmer / seller":
+      // Farmer dashboard not built yet — fall back to landing page.
+      // Change to "/farmerdashboard" once that dashboard is ready.
+      console.warn("[Auth] Farmer/Seller dashboard not built yet — routing to landing.");
+      return "/";
+    case "buyer":
+      return "/buyerdashboard";
+    case "delivery":
+    case "delivery rider":
+    case "supplier": // legacy alias
+      return "/deliverydashboard";
+    case "admin":
+      // Admin dashboard not built yet — fall back to landing page.
+      console.warn("[Auth] Admin dashboard not built yet — routing to landing.");
+      return "/";
+    default:
+      return "/";
+  }
+};
+
 // ======================== Component ========================
 const Login = ({ setUserId, setRole }) => {
   const navigate = useNavigate();
@@ -144,23 +164,21 @@ const Login = ({ setUserId, setRole }) => {
     setSuccess(null);
 
     setTimeout(() => {
+      // Mock auth — always logs in as a buyer for demo purposes.
+      // Change `role` here to test other dashboards:
+      //   "buyer" | "delivery" | "farmer" | "admin"
       const mockData = { user_id: "123", role: "buyer" };
 
       setUserId?.(mockData.user_id);
       setRole?.(mockData.role);
       sessionStorage.setItem("userId", mockData.user_id);
       localStorage.setItem("userId", mockData.user_id);
+      localStorage.setItem("userRole", mockData.role);
 
       setSuccess("Login successful!");
       setLoading(false);
 
-      switch (mockData.role.toLowerCase()) {
-        case "seller":   navigate("/farmersdashboard"); break;
-        case "admin":    navigate("/admindashboard"); break;
-        case "buyer":    navigate("/buyerdashboard"); break;
-        case "delivery": navigate("/deliverydashboard"); break;
-        default:         navigate("/");
-      }
+      navigate(resolveRole(mockData.role));
     }, 1200);
   };
 
@@ -186,22 +204,18 @@ const Login = ({ setUserId, setRole }) => {
 
     setTimeout(() => {
       const mockUserId = "456";
-      const mockRole = role.toLowerCase();
+      const mockRole = role; // keep original casing for display; resolveRole lowercases internally
 
       setUserId?.(mockUserId);
       setRole?.(mockRole);
       sessionStorage.setItem("userId", mockUserId);
       localStorage.setItem("userId", mockUserId);
+      localStorage.setItem("userRole", mockRole);
 
       setSuccess("Registration successful! Redirecting...");
       setLoading(false);
 
-      switch (mockRole) {
-        case "farmer / seller": navigate("/farmersdashboard"); break;
-        case "buyer":           navigate("/buyerdashboard"); break;
-        case "supplier":        navigate("/marketsellersdashboard"); break;
-        default:                navigate("/");
-      }
+      navigate(resolveRole(mockRole));
     }, 1200);
   };
 
@@ -223,7 +237,6 @@ const Login = ({ setUserId, setRole }) => {
 
       {/* ========== Form side ========== */}
       <div className="relative flex items-center justify-center p-6 sm:p-8 lg:p-12 bg-[var(--surface)]">
-        {/* Theme toggle top-right */}
         <div className="absolute top-5 right-5 sm:top-6 sm:right-6">
           <ThemeToggle />
         </div>
@@ -440,7 +453,7 @@ const Login = ({ setUserId, setRole }) => {
                       <option value="" disabled>Select your role</option>
                       <option>Farmer / Seller</option>
                       <option>Buyer</option>
-                      <option>Supplier</option>
+                      <option>Delivery Rider</option>
                     </select>
                     <ChevronIcon className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-dim)] pointer-events-none" />
                   </div>
@@ -506,14 +519,12 @@ const Login = ({ setUserId, setRole }) => {
 
       {/* ========== Visual side ========== */}
       <div className="relative overflow-hidden hidden lg:flex items-end p-14 bg-[var(--brand)]">
-        {/* decorative gradient meshes */}
         <div className="absolute inset-0 opacity-[0.12]" style={{
           background: "radial-gradient(ellipse at 20% 20%, rgba(255,255,255,.4), transparent 45%)",
         }} />
         <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-[var(--highlight)] opacity-20 blur-[100px]" />
         <div className="absolute -bottom-20 -left-10 w-96 h-96 rounded-full bg-[var(--accent)] opacity-15 blur-[100px]" />
 
-        {/* leaf pattern */}
         <div
           className="absolute inset-0 opacity-[0.05]"
           style={{
