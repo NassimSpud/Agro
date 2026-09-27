@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "../Modules/Users/ThemeToggle";
 
@@ -16,13 +16,6 @@ const SearchIcon = ({ className = "w-5 h-5" }) => (
   </svg>
 );
 
-const BellIcon = ({ className = "w-5 h-5" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-    <path d="M10.3 21a1.9 1.9 0 0 0 3.4 0" />
-  </svg>
-);
-
 const ChevronDownIcon = ({ className = "w-3.5 h-3.5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
     <path d="m6 9 6 6 6-6" />
@@ -32,6 +25,12 @@ const ChevronDownIcon = ({ className = "w-3.5 h-3.5" }) => (
 const ArrowRightIcon = ({ className = "w-4 h-4" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M5 12h14M12 5l7 7-7 7" />
+  </svg>
+);
+
+const CloseIcon = ({ className = "w-4 h-4" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 6 6 18M6 6l12 12" />
   </svg>
 );
 
@@ -121,11 +120,62 @@ const XSocialIcon = ({ className = "w-4 h-4" }) => (
   </svg>
 );
 
+// ======================== Nav data ========================
+const SERVICES_MENU = [
+  { name: "Marketplace",          desc: "Buy & sell farm produce",          to: "/services/marketplace" },
+  { name: "Logistics & Delivery", desc: "Nationwide cold-chain delivery",   to: "/services/logistics" },
+  { name: "Payments & Escrow",    desc: "Secure M-Pesa & card payments",    to: "/services/payments" },
+  { name: "Farm Advisory",        desc: "Expert agronomy support",          to: "/services/advisory" },
+  { name: "Bulk & Wholesale",     desc: "Volume pricing for institutions",  to: "/services/wholesale" },
+  { name: "Seller Verification",  desc: "ID-verified, trusted farmers",     to: "/services/verification" },
+];
+
+const NAV_ITEMS = [
+  { name: "Home",      to: "/" },
+  { name: "Market",    to: "/market" },
+  { name: "Community", to: "/community" },
+  { name: "Services",  to: "/services", dropdown: true },
+  { name: "About Us",  to: "/about" },
+];
+
+const POPULAR_SEARCHES = ["Avocado", "Maize", "Tomatoes", "Dairy meal", "Sukuma wiki", "Seeds", "Fertilizers"];
+
+const MODAL_CATEGORIES = [
+  { name: "Fruits",     emoji: "🍎", q: "Fruits" },
+  { name: "Vegetables", emoji: "🥬", q: "Vegetables" },
+  { name: "Grains",     emoji: "🌾", q: "Grains" },
+  { name: "Dairy",      emoji: "🥛", q: "Dairy" },
+];
+
 // ======================== Component ========================
 const LandingPage = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("Fruits");
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [modalSearch, setModalSearch] = useState("");
+
+  // Close modal on Escape key
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") setSearchOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Lock scroll while the modal is open
+  useEffect(() => {
+    if (searchOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [searchOpen]);
 
   const categories = [
     { name: "Fruits", emoji: "🍎" },
@@ -183,11 +233,49 @@ const LandingPage = () => {
     "🍌 Bananas", "🥔 Potatoes", "🌽 Sukuma Wiki", "🍯 Honey", "🐔 Poultry",
   ];
 
+  const footerMarketplace = [
+    { label: "Browse produce",     to: "/market" },
+    { label: "Sell your harvest",  to: "/auth" },
+    { label: "Farm tools & seeds", to: "/market" },
+    { label: "Livestock",          to: "/market" },
+    { label: "Track an order",     to: "/buyerdashboard/tracking" },
+  ];
+
+  const footerCompany = [
+    { label: "About us",     to: "/about" },
+    { label: "How it works", to: "/services" },
+    { label: "Community",    to: "/community" },
+    { label: "Blog",         to: "#" },
+    { label: "Press",        to: "#" },
+  ];
+
+  const footerSupport = [
+    { label: "Help centre",    to: "#" },
+    { label: "Contact us",     to: "#" },
+    { label: "Safety & trust", to: "/services/verification" },
+    { label: "Delivery info",  to: "/services/logistics" },
+    { label: "FAQs",           to: "#" },
+  ];
+
   const handleGetStarted = () => navigate("/auth");
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log("Searching for:", searchTerm);
+    const q = searchTerm.trim();
+    navigate(q ? `/market?q=${encodeURIComponent(q)}` : "/market");
+  };
+
+  const handleModalSearch = (e, override) => {
+    e?.preventDefault();
+    const q = (override ?? modalSearch).trim();
+    setSearchOpen(false);
+    setModalSearch("");
+    navigate(q ? `/market?q=${encodeURIComponent(q)}` : "/market");
+  };
+
+  const handleCategoryClick = (name) => {
+    setActiveCategory(name);
+    navigate(`/market?category=${encodeURIComponent(name)}`);
   };
 
   return (
@@ -216,41 +304,99 @@ const LandingPage = () => {
 
               {/* Desktop nav */}
               <ul className="hidden lg:flex items-center gap-1">
-                {["Explore", "Market", "Community", "Services", "About Us"].map((item, idx) => (
-                  <li key={idx}>
-                    <Link
-                      to="#"
-                      className={`group relative flex items-center gap-1 text-[13.5px] font-medium px-4 py-2 rounded-full transition-all ${
-                        item === "Explore"
-                          ? "text-[var(--accent-fg)] bg-[var(--accent-soft)]"
-                          : "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-2)]"
-                      }`}
-                    >
-                      {item}
-                      {item === "Services" && (
-                        <ChevronDownIcon className="w-3 h-3 opacity-60 group-hover:rotate-180 transition-transform" />
-                      )}
-                    </Link>
-                  </li>
-                ))}
+                {NAV_ITEMS.map((item) => {
+                  const isActive = item.name === "Home";
+                  if (item.dropdown) {
+                    return (
+                      <li
+                        key={item.name}
+                        className="relative"
+                        onMouseEnter={() => setServicesOpen(true)}
+                        onMouseLeave={() => setServicesOpen(false)}
+                      >
+                        <Link
+                          to={item.to}
+                          className={`group relative flex items-center gap-1 text-[13.5px] font-medium px-4 py-2 rounded-full transition-all ${
+                            servicesOpen
+                              ? "text-[var(--accent-fg)] bg-[var(--accent-soft)]"
+                              : "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-2)]"
+                          }`}
+                        >
+                          {item.name}
+                          <ChevronDownIcon
+                            className={`w-3 h-3 opacity-60 transition-transform ${
+                              servicesOpen ? "rotate-180" : "group-hover:rotate-180"
+                            }`}
+                          />
+                        </Link>
+
+                        {servicesOpen && (
+                          <div className="absolute left-0 top-full pt-2 w-[340px] z-50">
+                            <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-[0_25px_60px_-20px_rgba(20,60,35,0.35)] overflow-hidden py-2">
+                              {SERVICES_MENU.map((s) => (
+                                <Link
+                                  key={s.name}
+                                  to={s.to}
+                                  className="flex items-start gap-3 px-4 py-2.5 hover:bg-[var(--surface-2)] transition-colors"
+                                >
+                                  <span className="w-8 h-8 rounded-lg bg-[var(--accent-soft)] text-[var(--accent-fg)] flex items-center justify-center text-[11px] font-bold flex-shrink-0 mt-0.5">
+                                    {s.name[0]}
+                                  </span>
+                                  <span className="min-w-0">
+                                    <span className="block text-[13px] font-semibold text-[var(--text)]">
+                                      {s.name}
+                                    </span>
+                                    <span className="block text-[11.5px] text-[var(--text-dim)] mt-0.5">
+                                      {s.desc}
+                                    </span>
+                                  </span>
+                                </Link>
+                              ))}
+                              <div className="border-t border-[var(--border)] mt-1 pt-1">
+                                <Link
+                                  to="/services"
+                                  className="flex items-center justify-between px-4 py-2.5 text-[12.5px] font-semibold text-[var(--accent-fg)] hover:bg-[var(--accent-soft)] transition-colors"
+                                >
+                                  View all services
+                                  <ArrowRightIcon className="w-3.5 h-3.5" />
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </li>
+                    );
+                  }
+                  return (
+                    <li key={item.name}>
+                      <Link
+                        to={item.to}
+                        className={`text-[13.5px] font-medium px-4 py-2 rounded-full transition-all ${
+                          isActive
+                            ? "text-[var(--accent-fg)] bg-[var(--accent-soft)]"
+                            : "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-2)]"
+                        }`}
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
 
               {/* Actions */}
               <div className="flex items-center gap-2">
                 <ThemeToggle />
+
+                {/* Search — opens modal */}
                 <button
                   aria-label="Search"
+                  onClick={() => setSearchOpen(true)}
                   className="hidden sm:flex w-10 h-10 rounded-full bg-[var(--surface-2)] items-center justify-center text-[var(--text-muted)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent-fg)] transition-colors"
                 >
                   <SearchIcon className="w-[18px] h-[18px]" />
                 </button>
-                <button
-                  aria-label="Notifications"
-                  className="hidden sm:flex relative w-10 h-10 rounded-full bg-[var(--surface-2)] items-center justify-center text-[var(--text-muted)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent-fg)] transition-colors"
-                >
-                  <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[var(--highlight)] rounded-full ring-2 ring-[var(--surface)]" />
-                  <BellIcon className="w-[18px] h-[18px]" />
-                </button>
+
                 <button
                   onClick={() => navigate("/auth")}
                   className="group inline-flex items-center gap-2 pl-5 pr-4 py-2.5 rounded-full bg-[var(--brand)] text-[var(--brand-fg)] font-semibold text-[13.5px] hover:opacity-90 transition-all shadow-lg"
@@ -264,12 +410,80 @@ const LandingPage = () => {
         </div>
       </header>
 
+      {/* ================= Search Modal ================= */}
+      {searchOpen && (
+        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-20 sm:pt-28 px-4">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setSearchOpen(false)}
+          />
+          <div className="relative w-full max-w-2xl bg-[var(--surface)] border border-[var(--border)] rounded-3xl shadow-[0_30px_80px_-20px_rgba(20,60,35,0.45)] overflow-hidden modal-enter">
+            <form onSubmit={handleModalSearch}>
+              <div className="flex items-center gap-3 px-5 py-4 border-b border-[var(--border)]">
+                <SearchIcon className="w-5 h-5 text-[var(--text-dim)] flex-shrink-0" />
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="Search produce, categories or sellers..."
+                  value={modalSearch}
+                  onChange={(e) => setModalSearch(e.target.value)}
+                  className="flex-1 min-w-0 bg-transparent outline-none text-[15px] text-[var(--text)] placeholder-[var(--text-dim)]"
+                />
+                <button
+                  type="button"
+                  onClick={() => setSearchOpen(false)}
+                  aria-label="Close search"
+                  className="w-8 h-8 rounded-full hover:bg-[var(--surface-2)] flex items-center justify-center text-[var(--text-dim)] hover:text-[var(--text)] transition-colors"
+                >
+                  <CloseIcon className="w-4 h-4" />
+                </button>
+                <span className="hidden sm:inline-flex items-center gap-1 text-[10.5px] font-bold text-[var(--text-dim)] border border-[var(--border)] rounded-md px-2 py-1">
+                  ESC
+                </span>
+              </div>
+            </form>
+
+            <div className="p-4 sm:p-5">
+              <p className="text-[10.5px] font-bold uppercase tracking-[0.14em] text-[var(--text-dim)] mb-3 px-1">
+                Popular searches
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {POPULAR_SEARCHES.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => handleModalSearch(null, s)}
+                    className="px-3 py-1.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[12.5px] font-medium text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--border-strong)] transition-colors"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+
+              <p className="text-[10.5px] font-bold uppercase tracking-[0.14em] text-[var(--text-dim)] mb-3 mt-5 px-1">
+                Browse by category
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {MODAL_CATEGORIES.map((c) => (
+                  <button
+                    key={c.name}
+                    onClick={() => handleModalSearch(null, c.q)}
+                    className="flex items-center gap-2 p-3 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] transition-colors text-left"
+                  >
+                    <span className="text-lg">{c.emoji}</span>
+                    <span className="text-[12.5px] font-semibold text-[var(--text)]">{c.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ================= Hero ================= */}
       <section className="relative px-4 sm:px-6 lg:px-8 pt-10 sm:pt-16 lg:pt-20 pb-8">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center">
           {/* Left: copy */}
           <div className="relative">
-            {/* Eyebrow badge */}
             <div className="inline-flex items-center gap-2 bg-[var(--surface)] border border-[var(--border)] text-[var(--accent-fg)] text-xs font-semibold px-4 py-2 rounded-full shadow-sm mb-7">
               <span className="relative flex w-2 h-2">
                 <span className="absolute inline-flex w-full h-full rounded-full bg-[var(--accent)] opacity-75 animate-ping" />
@@ -291,7 +505,6 @@ const LandingPage = () => {
               with farmers and get fair prices, with zero middlemen.
             </p>
 
-            {/* Search */}
             <form
               onSubmit={handleSearch}
               className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[var(--surface)] rounded-2xl sm:rounded-full p-2 shadow-[0_10px_40px_-16px_rgba(20,60,35,0.35)] border border-[var(--border)] max-w-xl"
@@ -314,7 +527,6 @@ const LandingPage = () => {
               </button>
             </form>
 
-            {/* CTA row */}
             <div className="mt-7 flex flex-wrap items-center gap-4">
               <button
                 onClick={handleGetStarted}
@@ -324,7 +536,7 @@ const LandingPage = () => {
                 <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
               <Link
-                to="#"
+                to="/services"
                 className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--accent-fg)] transition-colors"
               >
                 <span className="w-9 h-9 rounded-full bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center shadow-sm">
@@ -332,11 +544,10 @@ const LandingPage = () => {
                     <path d="M8 5v14l11-7z" />
                   </svg>
                 </span>
-                Watch how it works
+                See how it works
               </Link>
             </div>
 
-            {/* Stats */}
             <div className="mt-10 flex items-center gap-6 sm:gap-8 flex-wrap">
               {stats.map((s, i) => (
                 <div key={i} className="flex items-center gap-6 sm:gap-8">
@@ -355,7 +566,6 @@ const LandingPage = () => {
           {/* Right: image collage */}
           <div className="relative">
             <div className="relative aspect-[4/5] sm:aspect-[5/5] lg:aspect-[4/5] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-[0_30px_80px_-30px_rgba(20,60,35,0.5)] border-4 border-[var(--surface)]">
-              {/* Fallback gradient behind the image */}
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--brand)] via-[var(--accent)] to-[var(--highlight)]" />
               <img
                 src="/images/agriland.jpg"
@@ -365,7 +575,7 @@ const LandingPage = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-              {/* Agricultural field motif — a row of grass/crop blades along the base of the photo, representing the produce AgriSoko trades in */}
+              {/* Agricultural field motif */}
               <svg
                 className="absolute bottom-0 left-0 w-full h-12 sm:h-16 text-white/30 pointer-events-none"
                 viewBox="0 0 400 40"
@@ -383,7 +593,6 @@ const LandingPage = () => {
                 <rect width="100%" height="100%" fill="url(#agriGrassRow)" />
               </svg>
 
-              {/* Bottom overlay chip */}
               <div className="absolute bottom-5 left-5 right-5 flex items-center gap-3 bg-black/25 backdrop-blur-xl border border-white/20 rounded-2xl p-3.5">
                 <span className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-white flex-shrink-0">
                   <SproutIcon className="w-5 h-5" />
@@ -395,7 +604,6 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Floating card — top left */}
             <div className="hidden sm:flex absolute -top-5 -left-5 lg:-left-8 items-center gap-3 bg-[var(--surface)] rounded-2xl p-3.5 shadow-[0_18px_45px_-18px_rgba(20,60,35,0.45)] border border-[var(--border)] animate-float">
               <span className="w-10 h-10 rounded-xl bg-[var(--accent-soft)] text-[var(--accent-fg)] flex items-center justify-center flex-shrink-0">
                 <ShieldIcon className="w-5 h-5" />
@@ -406,7 +614,6 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Floating card — right */}
             <div className="hidden sm:flex absolute top-1/3 -right-4 lg:-right-8 items-center gap-3 bg-[var(--surface)] rounded-2xl p-3.5 shadow-[0_18px_45px_-18px_rgba(20,60,35,0.45)] border border-[var(--border)] animate-float-delayed">
               <span className="w-10 h-10 rounded-xl bg-[var(--accent-soft)] text-[var(--accent-fg)] flex items-center justify-center flex-shrink-0">
                 <TruckIcon className="w-5 h-5" />
@@ -417,7 +624,6 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Floating price tag — bottom right */}
             <div className="hidden lg:block absolute -bottom-5 right-6 bg-[var(--brand)] text-[var(--brand-fg)] rounded-2xl px-4 py-3 shadow-[0_18px_45px_-18px_rgba(20,60,35,0.6)] animate-float">
               <p className="text-[10px] uppercase tracking-widest opacity-70 font-semibold">Avg. price</p>
               <p className="font-display font-bold text-lg leading-tight">
@@ -456,7 +662,7 @@ const LandingPage = () => {
             </p>
           </div>
           <Link
-            to="#"
+            to="/market"
             className="group inline-flex items-center gap-2 text-sm font-semibold text-[var(--accent-fg)] hover:opacity-80 self-start sm:self-auto"
           >
             View all categories
@@ -472,14 +678,13 @@ const LandingPage = () => {
             return (
               <button
                 key={cat.name}
-                onClick={() => setActiveCategory(cat.name)}
+                onClick={() => handleCategoryClick(cat.name)}
                 className={`group relative flex flex-col items-start gap-4 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border text-left transition-all duration-300 overflow-hidden ${
                   isActive
                     ? "bg-[var(--brand)] border-[var(--brand)] shadow-[0_20px_45px_-20px_rgba(20,60,35,0.6)]"
                     : "bg-[var(--surface)] border-[var(--border)] hover:border-[var(--accent)] hover:shadow-[0_18px_40px_-22px_rgba(20,60,35,0.35)] hover:-translate-y-0.5"
                 }`}
               >
-                {/* glow */}
                 <span
                   className={`absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl transition-opacity ${
                     isActive
@@ -525,7 +730,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ================= Features (Bento) ================= */}
+      {/* ================= Features ================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-20">
         <div className="mb-9 max-w-2xl">
           <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--accent-fg)] mb-3">
@@ -601,10 +806,8 @@ const LandingPage = () => {
       {/* ================= CTA band ================= */}
       <section className="px-4 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-7xl mx-auto relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-[var(--brand)] px-6 sm:px-10 lg:px-14 py-14 sm:py-16 shadow-[0_35px_80px_-40px_rgba(20,60,35,0.9)]">
-          {/* decorative blobs */}
           <div className="absolute -top-24 -right-16 w-80 h-80 rounded-full bg-[var(--highlight)] opacity-[0.15] blur-[80px]" />
           <div className="absolute -bottom-28 -left-16 w-80 h-80 rounded-full bg-[var(--accent)] opacity-20 blur-[80px]" />
-          {/* leaf pattern */}
           <div
             className="absolute inset-0 opacity-[0.05]"
             style={{
@@ -636,7 +839,7 @@ const LandingPage = () => {
                 <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
               <Link
-                to="#"
+                to="/services"
                 className="btn-ghost-brand inline-flex items-center justify-center gap-2 text-[var(--brand-fg)] font-semibold px-8 py-4 rounded-full transition-colors text-sm"
               >
                 Learn More
@@ -648,7 +851,6 @@ const LandingPage = () => {
 
       {/* ================= Footer ================= */}
       <footer className="relative bg-[var(--brand)] text-[var(--brand-fg)] overflow-hidden">
-        {/* subtle leaf pattern, consistent with the CTA band above */}
         <div
           className="absolute inset-0 opacity-[0.04] pointer-events-none"
           style={{
@@ -659,7 +861,6 @@ const LandingPage = () => {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-10">
           <div className="grid lg:grid-cols-[1.3fr_2fr_1fr] gap-12 lg:gap-8">
-            {/* Brand */}
             <div>
               <Link to="/" className="inline-flex items-center gap-2.5">
                 <span className="w-9 h-9 rounded-xl bg-[var(--brand-fg)]/12 flex items-center justify-center">
@@ -698,15 +899,14 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Link columns */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
               <div>
                 <h5 className="text-sm font-semibold mb-4">Marketplace</h5>
                 <ul className="space-y-2.5 text-sm opacity-70">
-                  {["Browse produce", "Sell your harvest", "Farm tools & seeds", "Livestock", "Track an order"].map((l) => (
-                    <li key={l}>
-                      <Link to="#" className="hover:opacity-100 hover:underline underline-offset-4 transition-opacity">
-                        {l}
+                  {footerMarketplace.map((l) => (
+                    <li key={l.label}>
+                      <Link to={l.to} className="hover:opacity-100 hover:underline underline-offset-4 transition-opacity">
+                        {l.label}
                       </Link>
                     </li>
                   ))}
@@ -715,10 +915,10 @@ const LandingPage = () => {
               <div>
                 <h5 className="text-sm font-semibold mb-4">Company</h5>
                 <ul className="space-y-2.5 text-sm opacity-70">
-                  {["About us", "How it works", "Careers", "Blog", "Press"].map((l) => (
-                    <li key={l}>
-                      <Link to="#" className="hover:opacity-100 hover:underline underline-offset-4 transition-opacity">
-                        {l}
+                  {footerCompany.map((l) => (
+                    <li key={l.label}>
+                      <Link to={l.to} className="hover:opacity-100 hover:underline underline-offset-4 transition-opacity">
+                        {l.label}
                       </Link>
                     </li>
                   ))}
@@ -727,10 +927,10 @@ const LandingPage = () => {
               <div>
                 <h5 className="text-sm font-semibold mb-4">Support</h5>
                 <ul className="space-y-2.5 text-sm opacity-70">
-                  {["Help centre", "Contact us", "Safety & trust", "Delivery info", "FAQs"].map((l) => (
-                    <li key={l}>
-                      <Link to="#" className="hover:opacity-100 hover:underline underline-offset-4 transition-opacity">
-                        {l}
+                  {footerSupport.map((l) => (
+                    <li key={l.label}>
+                      <Link to={l.to} className="hover:opacity-100 hover:underline underline-offset-4 transition-opacity">
+                        {l.label}
                       </Link>
                     </li>
                   ))}
@@ -738,7 +938,6 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Newsletter */}
             <div>
               <h5 className="text-sm font-semibold mb-3">Weekly harvest prices</h5>
               <p className="text-sm opacity-70 leading-relaxed mb-4">
@@ -763,7 +962,6 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Bottom bar */}
           <div className="mt-14 pt-8 border-t border-[var(--brand-fg)]/12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs opacity-60">
             <span>© 2026 AgriSoko. Built for Kenya&apos;s farmers.</span>
             <div className="flex items-center gap-6">
@@ -784,17 +982,12 @@ const LandingPage = () => {
         .font-display { font-family: 'Fraunces', Georgia, serif; font-variation-settings: 'SOFT' 0, 'WONK' 0; }
         .font-body    { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
 
-        /* Translucent header pill that adapts to the active theme */
         .glass-surface {
           background: color-mix(in srgb, var(--surface) 78%, transparent);
         }
-
-        /* Chip sitting on top of the brand-coloured surface */
         .chip-on-brand {
           background: color-mix(in srgb, var(--brand-fg) 14%, transparent);
         }
-
-        /* Ghost button sitting on top of the brand-coloured CTA band */
         .btn-ghost-brand {
           border: 1px solid color-mix(in srgb, var(--brand-fg) 25%, transparent);
         }
@@ -822,13 +1015,18 @@ const LandingPage = () => {
         .animate-float-slow   { animation: floatSlow 18s ease-in-out infinite; }
         .animate-float-slower { animation: floatSlow 24s ease-in-out infinite reverse; }
 
-        /* Slim scrollbars */
+        @keyframes modalIn {
+          from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modal-enter { animation: modalIn 0.2s ease-out; }
+
         ::-webkit-scrollbar { height: 6px; width: 6px; }
         ::-webkit-scrollbar-thumb { background: rgba(20,48,31,0.15); border-radius: 99px; }
 
         @media (prefers-reduced-motion: reduce) {
           .animate-marquee, .animate-float, .animate-float-delayed,
-          .animate-float-slow, .animate-float-slower { animation: none; }
+          .animate-float-slow, .animate-float-slower, .modal-enter { animation: none; }
         }
       `}</style>
     </div>

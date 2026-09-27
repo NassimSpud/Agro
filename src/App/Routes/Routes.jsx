@@ -4,6 +4,18 @@ import { Routes, Route } from "react-router-dom";
 import LandingPage from "../LandingPage/Landing";
 import Login from "../Authentication/Login/Login";
 
+// Public sub-pages
+import Market from "../LandingPage/pages/Market";
+import Community from "../LandingPage/pages/Community";
+import Services from "../LandingPage/pages/Services";
+import AboutUs from "../LandingPage/pages/AboutUs";
+import ServiceMarketplace from "../LandingPage/pages/services/Marketplace";
+import ServiceLogistics from "../LandingPage/pages/services/Logistics";
+import ServicePayments from "../LandingPage/pages/services/Payments";
+import ServiceAdvisory from "../LandingPage/pages/services/Advisory";
+import ServiceWholesale from "../LandingPage/pages/services/Wholesale";
+import ServiceVerification from "../LandingPage/pages/Services/Verification";
+
 // Dashboard Layouts
 import BuyerDashBoard from "../Modules/Users/BuyersDashBoard.jsx";
 
@@ -101,6 +113,20 @@ function AppRoutes() {
       {/* ==================== PUBLIC ==================== */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/auth" element={<Login />} />
+
+      {/* Public marketing pages */}
+      <Route path="/market" element={<Market />} />
+      <Route path="/community" element={<Community />} />
+      <Route path="/about" element={<AboutUs />} />
+
+      {/* Services — overview + detail pages */}
+      <Route path="/services" element={<Services />} />
+      <Route path="/services/marketplace" element={<ServiceMarketplace />} />
+      <Route path="/services/logistics" element={<ServiceLogistics />} />
+      <Route path="/services/payments" element={<ServicePayments />} />
+      <Route path="/services/advisory" element={<ServiceAdvisory />} />
+      <Route path="/services/wholesale" element={<ServiceWholesale />} />
+      <Route path="/services/verification" element={<ServiceVerification />} />
 
       {/* ==================== BUYERS ==================== */}
       <Route path="/buyerdashboard" element={<BuyerDashBoard />}>
