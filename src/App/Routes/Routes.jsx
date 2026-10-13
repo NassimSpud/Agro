@@ -9,12 +9,12 @@ import Market from "../LandingPage/pages/Market";
 import Community from "../LandingPage/pages/Community";
 import Services from "../LandingPage/pages/Services";
 import AboutUs from "../LandingPage/pages/AboutUs";
-import ServiceMarketplace from "../LandingPage/pages/services/Marketplace";
-import ServiceLogistics from "../LandingPage/pages/services/Logistics";
-import ServicePayments from "../LandingPage/pages/services/Payments";
-import ServiceAdvisory from "../LandingPage/pages/services/Advisory";
-import ServiceWholesale from "../LandingPage/pages/services/Wholesale";
-import ServiceVerification from "../LandingPage/pages/services/Verification";
+import ServiceMarketplace from "../LandingPage/pages/Services/Marketplace";
+import ServiceLogistics from "../LandingPage/pages/Services/Logistics";
+import ServicePayments from "../LandingPage/pages/Services/Payments";
+import ServiceAdvisory from "../LandingPage/pages/Services/Advisory";
+import ServiceWholesale from "../LandingPage/pages/Services/Wholesale";
+import ServiceVerification from "../LandingPage/pages/Services/Verification";
 
 // ==================== Dashboard Layouts ====================
 import BuyerDashBoard from "../Modules/Users/BuyersDashBoard.jsx";
