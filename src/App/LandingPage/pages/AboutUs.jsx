@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import PublicPageShell from "./PublicPageShell";
+import PublicPageShell from "./PublicPageshell";
 
 // ======================== Icons ========================
 const ArrowRightIcon = ({ className = "w-4 h-4" }) => (

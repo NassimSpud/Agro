@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import PublicPageShell from "../PublicPageShell";
+import PublicPageShell from "../PublicPageshell";
 
 const ArrowRightIcon = ({ className = "w-4 h-4" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">

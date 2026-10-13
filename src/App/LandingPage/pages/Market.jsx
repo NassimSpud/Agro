@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import PublicPageShell from "./PublicPageShell";
+import PublicPageShell from "./PublicPageshell";
 import { MOCK_PRODUCTS } from "../../Modules/Buyers/Header/Cart/StoreContext";
 
 const ArrowRightIcon = ({ className = "w-4 h-4" }) => (
