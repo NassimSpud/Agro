@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
-// Landing & Public Pages
+// ==================== Landing & Public Pages ====================
 import LandingPage from "../LandingPage/Landing";
 import Login from "../Authentication/Login/Login";
 
@@ -14,12 +14,14 @@ import ServiceLogistics from "../LandingPage/pages/services/Logistics";
 import ServicePayments from "../LandingPage/pages/services/Payments";
 import ServiceAdvisory from "../LandingPage/pages/services/Advisory";
 import ServiceWholesale from "../LandingPage/pages/services/Wholesale";
-import ServiceVerification from "../LandingPage/pages/Services/Verification";
+import ServiceVerification from "../LandingPage/pages/services/Verification";
 
-// Dashboard Layouts
+// ==================== Dashboard Layouts ====================
 import BuyerDashBoard from "../Modules/Users/BuyersDashBoard.jsx";
+import DeliveryDashBoard from "../Modules/Users/DeliverersDashBoard.jsx";
+import FarmerDashBoard from "../Modules/Users/FarmersDashBoard.jsx";
 
-// Buyer Components
+// ==================== Buyer Components ====================
 import BuyerHome from "../Modules/Buyers/BuyerHome";
 import MarketPlace from "../Modules/Buyers/MarketPlace";
 import Orders from "../Modules/Buyers/Orders";
@@ -35,8 +37,7 @@ import NearbyShop from "../Modules/Buyers/NearbyShop";
 import Settings from "../Modules/Buyers/Settings";
 import Cart from "../Modules/Buyers/Header/Cart/Cart.jsx";
 
-// Delivery Components
-import DeliveryDashBoard from "../Modules/Users/DeliverersDashBoard.jsx";
+// ==================== Delivery Components ====================
 import DeliveryHome from "../Modules/Deliverers/DeliveryHome";
 import ActiveDeliveries from "../Modules/Deliverers/ActiveDeliveries";
 import DeliveryHistory from "../Modules/Deliverers/DeliveryHistory";
@@ -47,41 +48,41 @@ import DeliveryGuides from "../Modules/Deliverers/Guides";
 import DeliveryFaq from "../Modules/Deliverers/FAQ";
 import ToolsResources from "../Modules/Deliverers/ToolsResources";
 import DeliveryCommunity from "../Modules/Deliverers/Community";
-import DeliverySettings from "../Modules/Deliverers/Settings.jsx";
+import DeliverySettings from "../Modules/Deliverers/Settings";
 
-// Farmer Components
-// import FarmerDashBoard from "../Modules/Users/FarmersDashBoard.jsx";
-// import FarmerHome from "../Modules/Users/Farmers/Home/FarmerHome";
-// import FarmerProducts from "../Modules/Users/Farmers/Products/FarmerProducts";
-// import FarmerOrders from "../Modules/Users/Farmers/Orders/FarmerOrders";
-// import FarmerInventory from "../Modules/Users/Farmers/Inventory/FarmerInventory";
-// import FarmerDeliveries from "../Modules/Users/Farmers/Deliveries/FarmerDeliveries";
-// import FarmerPayments from "../Modules/Users/Farmers/Payments/FarmerPayments";
-// import FarmerDeliveryHistory from "../Modules/Users/Farmers/DeliveryHistory/FarmerDeliveryHistory";
-// import FarmerTracking from "../Modules/Users/Farmers/Tracking/FarmerTracking";
-// import FarmerMessages from "../Modules/Users/Farmers/Messages/FarmerMessages";
-// import FarmerCategories from "../Modules/Users/Farmers/Categories/FarmerCategories";
-// import FarmerGuides from "../Modules/Users/Farmers/Guides/FarmerGuides";
-// import FarmerFaq from "../Modules/Users/Farmers/FAQ/FarmerFaq";
-// import FarmerCommunity from "../Modules/Users/Farmers/Community/FarmerCommunity";
+// ==================== Farmer Components ====================
+import FarmerHome from "../Modules/Farmers/FarmerHome";
+import FarmerProducts from "../Modules/Farmers/FarmerProducts";
+import FarmerOrders from "../Modules/Farmers/FarmerOrders";
+import FarmerInventory from "../Modules/Farmers/FarmerInventory";
+import FarmerDeliveries from "../Modules/Farmers/FarmerDeliveries";
+import FarmerPayments from "../Modules/Farmers/FarmerPayments";
+import FarmerDeliveryHistory from "../Modules/Farmers/FarmerDeliveryHistory";
+import FarmerTracking from "../Modules/Farmers/FarmerTracking";
+import FarmerMessages from "../Modules/Farmers/FarmerMessages";
+import FarmerCategories from "../Modules/Farmers/FarmerCategories";
+import FarmerGuides from "../Modules/Farmers/FarmerGuides";
+import FarmerFaq from "../Modules/Farmers/FarmerFAQ";
+import FarmerCommunity from "../Modules/Farmers/FarmerCommunity";
+import FarmerSettings from "../Modules/Farmers/FarmerSettings";
 
-// Market Seller Components
+// ==================== Market Seller Components (not built yet) ====================
 // import MarketSellersDashBoard from "../Modules/Users/MarketSellersDashBoard.jsx";
-// import MarketSellersHome from "../Modules/Users/MarketSellers/Home/MarketSellersHome";
-// import MarketSellersOrders from "../Modules/Users/MarketSellers/Orders/MarketSellersOrders";
-// import MarketSellersInventory from "../Modules/Users/MarketSellers/Inventory/MarketSellersInventory";
-// import MarketSellersDeliveries from "../Modules/Users/MarketSellers/Deliveries/MarketSellersDeliveries";
-// import MarketSellersDeliveryHistory from "../Modules/Users/MarketSellers/DeliveryHistory/MarketSellersDeliveryHistory";
-// import MarketSellersTracking from "../Modules/Users/MarketSellers/Tracking/MarketSellersTracking";
-// import MarketSellersMessages from "../Modules/Users/MarketSellers/Messages/MarketSellersMessages";
-// import MarketSellersCategoriesFruits from "../Modules/Users/MarketSellers/Categories/MarketSellersCategoriesFruits";
-// import MarketSellersCategoriesVegetables from "../Modules/Users/MarketSellers/Categories/MarketSellersCategoriesVegetables";
-// import MarketSellersCategoriesDairy from "../Modules/Users/MarketSellers/Categories/MarketSellersCategoriesDairy";
-// import MarketSellersGuides from "../Modules/Users/MarketSellers/Guides/MarketSellersGuides";
-// import MarketSellersFaq from "../Modules/Users/MarketSellers/FAQ/MarketSellersFaq";
-// import MarketSellersCommunity from "../Modules/Users/MarketSellers/Community/MarketSellersCommunity";
+// import MarketSellersHome from "../Modules/MarketSellers/MarketSellersHome";
+// import MarketSellersOrders from "../Modules/MarketSellers/MarketSellersOrders";
+// import MarketSellersInventory from "../Modules/MarketSellers/MarketSellersInventory";
+// import MarketSellersDeliveries from "../Modules/MarketSellers/MarketSellersDeliveries";
+// import MarketSellersDeliveryHistory from "../Modules/MarketSellers/MarketSellersDeliveryHistory";
+// import MarketSellersTracking from "../Modules/MarketSellers/MarketSellersTracking";
+// import MarketSellersMessages from "../Modules/MarketSellers/MarketSellersMessages";
+// import MarketSellersCategoriesFruits from "../Modules/MarketSellers/Categories/MarketSellersCategoriesFruits";
+// import MarketSellersCategoriesVegetables from "../Modules/MarketSellers/Categories/MarketSellersCategoriesVegetables";
+// import MarketSellersCategoriesDairy from "../Modules/MarketSellers/Categories/MarketSellersCategoriesDairy";
+// import MarketSellersGuides from "../Modules/MarketSellers/MarketSellersGuides";
+// import MarketSellersFaq from "../Modules/MarketSellers/MarketSellersFAQ";
+// import MarketSellersCommunity from "../Modules/MarketSellers/MarketSellersCommunity";
 
-// Admin Components
+// ==================== Admin Components (not built yet) ====================
 // import AdminDashboard from "../Modules/Users/AdminDashboard.jsx";
 // import AdminHome from "../Modules/Administrator/Home/Home";
 // import ViewUsers from "../Modules/Administrator/UserManagement/ViewUsers";
@@ -106,6 +107,7 @@ import DeliverySettings from "../Modules/Deliverers/Settings.jsx";
 // import APIKeys from "../Modules/Administrator/SystemSettings/APIKeys";
 // import Tools from "../Modules/Administrator/Tools/Tools";
 
+// ==================== Routes ====================
 function AppRoutes() {
   return (
     <Routes>
@@ -163,28 +165,30 @@ function AppRoutes() {
         <Route path="faq" element={<DeliveryFaq />} />
         <Route path="tools" element={<ToolsResources />} />
         <Route path="community" element={<DeliveryCommunity />} />
-        <Route path="settings" element={<DeliverySettings />} /> 
+        <Route path="settings" element={<DeliverySettings />} />
       </Route>
 
       {/* ==================== FARMER ==================== */}
-      {/* <Route path="/farmerdashboard" element={<FarmerDashBoard />}>
+      <Route path="/farmerdashboard" element={<FarmerDashBoard />}>
         <Route index element={<FarmerHome />} />
         <Route path="products" element={<FarmerProducts />} />
         <Route path="orders" element={<FarmerOrders />} />
         <Route path="inventory" element={<FarmerInventory />} />
         <Route path="deliveries" element={<FarmerDeliveries />} />
-        <Route path="payments" element={<FarmerPayments />} />
         <Route path="deliveryhistory" element={<FarmerDeliveryHistory />} />
         <Route path="tracking" element={<FarmerTracking />} />
+        <Route path="payments" element={<FarmerPayments />} />
         <Route path="messages" element={<FarmerMessages />} />
         <Route path="categories" element={<FarmerCategories />} />
         <Route path="guides" element={<FarmerGuides />} />
         <Route path="faq" element={<FarmerFaq />} />
         <Route path="community" element={<FarmerCommunity />} />
-      </Route> */}
+        <Route path="settings" element={<FarmerSettings />} />
+      </Route>
 
-      {/* ==================== MARKET SELLERS ==================== */}
-      {/* <Route path="/marketsellersdashboard" element={<MarketSellersDashBoard />}>
+      {/* ==================== MARKET SELLERS (not built yet) ==================== */}
+      {/*
+      <Route path="/marketsellersdashboard" element={<MarketSellersDashBoard />}>
         <Route index element={<MarketSellersHome />} />
         <Route path="orders" element={<MarketSellersOrders />} />
         <Route path="inventory" element={<MarketSellersInventory />} />
@@ -198,10 +202,12 @@ function AppRoutes() {
         <Route path="guides" element={<MarketSellersGuides />} />
         <Route path="faq" element={<MarketSellersFaq />} />
         <Route path="community" element={<MarketSellersCommunity />} />
-      </Route> */}
+      </Route>
+      */}
 
-      {/* ==================== ADMIN ==================== */}
-      {/* <Route path="/admindashboard" element={<AdminDashboard />}>
+      {/* ==================== ADMIN (not built yet) ==================== */}
+      {/*
+      <Route path="/admindashboard" element={<AdminDashboard />}>
         <Route index element={<AdminHome />} />
         <Route path="users" element={<ViewUsers />} />
         <Route path="adduser" element={<AddUser />} />
@@ -224,7 +230,8 @@ function AppRoutes() {
         <Route path="settings/security" element={<SecuritySettings />} />
         <Route path="settings/apikeys" element={<APIKeys />} />
         <Route path="tools" element={<Tools />} />
-      </Route> */}
+      </Route>
+      */}
 
       {/* ==================== PAGE NOT FOUND ==================== */}
       {/* Add a <Route path="*" element={<NotFound />} /> here later */}
